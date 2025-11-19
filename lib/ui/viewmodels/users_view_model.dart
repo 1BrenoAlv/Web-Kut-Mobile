@@ -20,7 +20,7 @@ class UsersViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
-      _usersList = await _service.getUsers();
+      _usersList = await _service.getUsers(); // BUSCA DADOS
     } catch (e) {
       _errorMensagem = e.toString();
     } finally {
@@ -35,7 +35,7 @@ class UsersViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
-      final novoUser = await _service.createUsers(user);
+      final novoUser = await _service.createUsers(user); // cria
       _usersList.add(novoUser);
     } catch (e) {
       _errorMensagem = e.toString();

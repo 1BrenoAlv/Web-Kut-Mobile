@@ -47,4 +47,16 @@ class ApiPostsService {
       throw Exception('Ocorreu um erro ao criar post: $e');
     }
   }
+
+  Future<List<PostsModels>> getPostByUser(int userId) async {
+    final url = Uri.parse('$_url?userId=$userId');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonList = jsonDecode(response.body);
+      return jsonList.map((json) => PostsModels.fromJson(json)).toList();
+    } else {
+      throw Exception('Erro ao buscar posts');
+    }
+  }
 }

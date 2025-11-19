@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:web_kut/core/models/posts_models.dart';
+import 'package:web_kut/core/models/users_models.dart';
 import 'package:web_kut/core/service/api_posts_service.dart';
+import 'package:web_kut/core/service/api_users_service.dart';
 
 class PostsViewModel with ChangeNotifier {
   final ApiPostsService _service = ApiPostsService();
+  final ApiUsersService _userService = ApiUsersService();
 
   bool _carregando = false;
   List<PostsModels> _postList = [];
+  List<UsersModels> _userList = [];
 
   String? _errorMensagem;
 
@@ -21,6 +25,7 @@ class PostsViewModel with ChangeNotifier {
 
     try {
       _postList = await _service.getPosts();
+      _userList = await _userService.getUsers();
     } catch (e) {
       _errorMensagem = e.toString();
     } finally {
@@ -37,6 +42,28 @@ class PostsViewModel with ChangeNotifier {
     try {
       final novoPost = await _service.postPosts(post);
       _postList.add(novoPost);
+    } catch (e) {
+      _errorMensagem = e.toString();
+    } finally {
+      _carregando = false;
+      notifyListeners();
+    }
+  }
+
+  String getNomeAutor(int userId) {
+    try {
+      final user = _userList.firstWhere((u) => u.id == userId);
+      return user.username;
+    } catch (e) {
+      return 'Desconhecido';
+    }
+  }
+
+  Future<void> getMyPosts(int userId) async {
+    _carregando = true;
+    notifyListeners();
+    try {
+      _postList = await _service.getPostByUser(userId);
     } catch (e) {
       _errorMensagem = e.toString();
     } finally {
