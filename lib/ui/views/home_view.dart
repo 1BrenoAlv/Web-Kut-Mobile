@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:web_kut/ui/viewmodels/posts_view_model.dart';
 import 'package:web_kut/ui/views/const/colors_const.dart';
+import 'package:web_kut/ui/views/const/fonts_const.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -23,19 +24,28 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorsConst.bgColor,
-      appBar: AppBar(
-        backgroundColor: ColorsConst.bgColor,
-        title: Text('Teste', style: TextStyle(color: Colors.white)),
-        flexibleSpace: Container(
-          alignment: Alignment.bottomCenter,
-          padding: EdgeInsets.only(bottom: 16),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(90.0),
+        child: AppBar(
+          toolbarHeight: 100.0,
+
+          backgroundColor: ColorsConst.bgColor,
+          centerTitle: true,
+
+          title: SizedBox(
+            width: 300,
+            height: 80,
+            child: Image.asset('assets/images/ws.png', fit: BoxFit.contain),
+          ),
         ),
       ),
       body: Center(
         child: Consumer<PostsViewModel>(
           builder: (context, viewModel, child) {
             if (viewModel.carregando) {
-              return const CircularProgressIndicator();
+              return const CircularProgressIndicator(
+                color: Color.fromRGBO(101, 96, 234, 1),
+              );
             }
 
             if (viewModel.postList.isEmpty) {
@@ -53,10 +63,29 @@ class _HomeViewState extends State<HomeView> {
 
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Card(
-                    color: ColorsConst.cardColor,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: ColorsConst.cardColor,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 5,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                      border: const Border(
+                        bottom: BorderSide(
+                          color: Color.fromRGBO(101, 96, 234, 1),
+                          width: 3.0,
+                        ),
+                      ),
+                    ),
                     child: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 12,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -73,29 +102,20 @@ class _HomeViewState extends State<HomeView> {
                               Expanded(
                                 child: Text(
                                   authorName,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                  ),
+                                  style: FontsConst.nomeAuthorPost,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
                           ),
-                          const Divider(),
-
-                          Text(
-                            post.title,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          const Divider(
+                            color: Color.fromARGB(148, 158, 158, 158),
                           ),
+
+                          Text(post.title, style: FontsConst.tituloPost),
                           const SizedBox(height: 5),
 
-                          // Corpo do Post
-                          Text(post.body, style: TextStyle(color: Colors.grey)),
+                          Text(post.body, style: FontsConst.conteudoPost),
                         ],
                       ),
                     ),
