@@ -14,7 +14,9 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    context.read<PostsViewModel>().getPost();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<PostsViewModel>().getPost();
+    });
   }
 
   @override
@@ -37,7 +39,10 @@ class _HomeViewState extends State<HomeView> {
             }
 
             if (viewModel.postList.isEmpty) {
-              return const Text('Nenhum post carregado!');
+              return const Text(
+                'Nenhum post carregado!',
+                style: TextStyle(color: Colors.red),
+              );
             }
 
             return ListView.builder(
@@ -60,17 +65,20 @@ class _HomeViewState extends State<HomeView> {
                               CircleAvatar(
                                 backgroundColor: ColorsConst.btnColor,
                                 child: Text(
-                                  authorName[0],
+                                  authorName.isNotEmpty ? authorName[0] : '?',
                                   style: const TextStyle(color: Colors.white),
                                 ),
                               ),
                               const SizedBox(width: 10),
-                              Text(
-                                authorName,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 16,
+                              Expanded(
+                                child: Text(
+                                  authorName,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],

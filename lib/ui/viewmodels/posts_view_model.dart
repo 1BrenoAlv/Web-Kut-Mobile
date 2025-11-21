@@ -25,6 +25,7 @@ class PostsViewModel with ChangeNotifier {
 
     try {
       _postList = await _service.getPosts();
+
       _userList = await _userService.getUsers();
     } catch (e) {
       _errorMensagem = e.toString();
@@ -51,11 +52,15 @@ class PostsViewModel with ChangeNotifier {
   }
 
   String getNomeAutor(int userId) {
+    if (_userList.isEmpty) {
+      return "Carregando...";
+    }
+
     try {
       final user = _userList.firstWhere((u) => u.id == userId);
-      return user.username;
+      return user.name;
     } catch (e) {
-      return 'Desconhecido';
+      return "Desconhecido";
     }
   }
 
